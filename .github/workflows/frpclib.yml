@@ -31,9 +31,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check directory structure
+      # 列出项目目录，帮助确认 frpclib 的确切位置
+      - name: List directory structure
         run: ls -R
-        # 确保你能看到 cmd/frpclib 目录，如果路径不对，这一步会打印当前的文件结构以帮助调整。
 
       - run: sudo apt-get update -q -y
       - run: sudo apt-get install -q -y --no-install-recommends curl wget unzip g++ libc6-dev
@@ -62,8 +62,9 @@ jobs:
 
       - run: go mod tidy && go get -u golang.org/x/mobile/bind
 
-      # 确认 cd 到的路径正确，否则需要根据 ls 的结果调整路径
-      - run: cd ./cmd/frpclib && gomobile bind -v --target=android -androidapi ${{ env.MIN_ANDROID_API }} -o frpclib.aar -ldflags="-s -w" .
+      # 这里使用路径占位符，根据目录结构调整
+      - name: Build FrpcLib
+        run: cd <adjusted_path_to_frpclib> && gomobile bind -v --target=android -androidapi ${{ env.MIN_ANDROID_API }} -o frpclib.aar -ldflags="-s -w" .
 
       - name: Save logcat output
         uses: actions/upload-artifact@master
