@@ -64,7 +64,7 @@ jobs:
 
       # 这里使用路径占位符，根据目录结构调整
       - name: Build FrpcLib
-        run: cd <adjusted_path_to_frpclib> && gomobile bind -v --target=android -androidapi ${{ env.MIN_ANDROID_API }} -o frpclib.aar -ldflags="-s -w" .
+        run: cd <adjusted_path_to_frpc> && gomobile bind -v --target=android -androidapi ${{ env.MIN_ANDROID_API }} -o frpclib.aar -ldflags="-s -w" .
 
       - name: Save logcat output
         uses: actions/upload-artifact@master
