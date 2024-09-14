@@ -31,15 +31,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      # # 删除旧的工作流
-      # - name: Delete Old Build
-      #   uses: Mattraks/delete-workflow-runs@v2
-      #   with:
-      #     token: ${{ secrets.TOKEN }}
-      #     repository: ${{ github.repository }}
-      #     retain_days: 0 # 全部删除只留正在跑的一条
-      #     keep_minimum_runs: 0 # 全部删除只留正在跑的一条
-      #     delete_workflow_pattern: 'frpclib'
+      - name: Check directory structure
+        run: ls -R
+        # 确保你能看到 cmd/frpclib 目录，如果路径不对，这一步会打印当前的文件结构以帮助调整。
 
       - run: sudo apt-get update -q -y
       - run: sudo apt-get install -q -y --no-install-recommends curl wget unzip g++ libc6-dev
@@ -67,6 +61,8 @@ jobs:
       - run: gomobile init -v
 
       - run: go mod tidy && go get -u golang.org/x/mobile/bind
+
+      # 确认 cd 到的路径正确，否则需要根据 ls 的结果调整路径
       - run: cd ./cmd/frpclib && gomobile bind -v --target=android -androidapi ${{ env.MIN_ANDROID_API }} -o frpclib.aar -ldflags="-s -w" .
 
       - name: Save logcat output
@@ -76,7 +72,6 @@ jobs:
           name: logcat
           path: artifacts/logcat.log
 
-      # 存档打包的文件
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
